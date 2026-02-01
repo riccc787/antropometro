@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antropómetro Estoico-Cristiano de Imperturbabilidad</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🙏 Antropómetro Estoico-Cristiano</h1>
+            <p class="subtitle">De la Imperturbabilidad Espiritual</p>
+        </header>
+
+        <!-- MENSAJE IMPORTANTE INTEGRADO -->
+        <div class="important-notice">
+            <p><strong>Antes de empezar. Lee esto <a href="https://docs.google.com/document/d/1T9I38g7YzhwZv1pG5JnIxNWwUQ7-cVmR7B1Ab6ZcTxc/edit?usp=sharing" target="_blank">aquí</a></strong></p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab(event, 'evaluation')">📝 Nueva Evaluación</button>
+            <button class="tab-button" onclick="openTab(event, 'results')">📊 Mis Resultados</button>
+            <button class="tab-button" onclick="openTab(event, 'progress')">📈 Mi Progreso</button>
+        </div>
+
+        <!-- TAB 1: NUEVA EVALUACIÓN -->
+        <div id="evaluation" class="tab-content active">
+            <div class="input-group">
+                <label for="evalDate">📅 Fecha de Evaluación (Opcional):</label>
+                <input type="date" id="evalDate">
+            </div>
+
+            <!-- PRINCIPIO 1 -->
+            <div class="principle">
+                <div class="principle-title">1. Soberanía Divina y Dicotomía del Control</div>
+                <div class="principle-description">
+                    Reconozco que Dios es soberano sobre lo incontrolable, mientras actúo responsablemente en lo que sí puedo controlar
+                </div>
+                <div class="slider-container">
+                    <span>No reconozco el control divino</span>
+                    <input type="range" class="slider" id="prin1" min="-3" max="3" value="0" oninput="updateValue(this)">
+                    <span class="value-display" id="val1">0</span>
+                    <span>Confío totalmente en la soberanía de Dios</span>
+                </div>
+            </div>
+
+            <!-- PRINCIPIO 2 -->
+            <div class="principle">
+                <div class="principle-title">2. Providencia Divina y Visualización Negativa</div>
+                <div class="principle-description">
+                    Me preparo mentalmente para dificultades confiando en que Dios tiene propósito en cada prueba
+                </div>
+                <div class="slider-container">
+                    <span>Evito pensar en lo negativo</span>
+                    <input type="range" class="slider" id="prin2" min="-3" max="3" value="0" oninput="updateValue(this)">
+                    <span class="value-display" id="val2">0</span>
+                    <span>Me preparo espiritualmente para cualquier prueba</span>
+                </div>
+            </div>
+
+            <!-- PRINCIPIO 3 -->
+            <div class="principle">
+                <div class="principle-title">3. Sabiduría Divina vs. Humana</div>
+                <div class="principle-description">
+                    Busco discernimiento divino para ver las situaciones desde la perspectiva eterna de Dios
+                </div>
+                <div class="slider-container">
+                    <span>Confío solo en mi razonamiento</span>
+                    <input type="range" class="slider" id="prin3" min="-3" max="3" value="0" oninput="updateValue(this)">
+                    <span class="value-display" id="val3">0</span>
+                    <span>Busco siempre la sabiduría divina en oración</span>
+                </div>
+            </div>
+
+            <!-- PRINCIPIO 4 -->
+            <div class="principle">
+                <div class="principle-title">4. Justicia Divina y Amor al Prójimo</div>
+                <div class="principle-description">
+                    Trato a otros con justicia porque son creados a imagen de Dios
+                </div>
+                <div class="slider-container">
+                    <span>Veo a otros como competencia</span>
+                    <input type="range" class="slider" id="prin4" min="-3" max="3" value="0" oninput="updateValue(this)">
+                    <span class="value-display" id="val4">0</span>
+                    <span>Veo la imagen de Dios en cada persona</span>
+                </div>
+            </div>
+
+            <!-- PRINCIPIO 5 -->
+            <div class="principle">
+                <div class="principle-title">5. Coraje Espiritual ante la Adversidad</div>
+                <div class="principle-description">
+                    Tengo valor para vivir según principios bíblicos, confiando en que Dios es mi fortaleza
+                </div>
+                <div class="slider-container">
+                    <span>Tengo miedo de sufrir por mis valores</span>
+                    <input type="range" class="slider" id="prin5" min="-3" max="3" value="0" oninput="updateValue(this)">
+                    <span class="value-display" id="val5">0</span>
+                    <span>Estoy dispuesto a sufrir por la fe en Cristo</span>
+                </div>
+            </div>
+
+            <!-- PRINCIPIO 6 -->
+            <div class="principle">
+                <div class="principle-title">6. Disciplina Espiritual y Autocontrol</div>
+                <div class="principle-description">
+                    Desarrollo autodisciplina como cooperación con la obra del Espíritu Santo en mí
+                </div>
+                <div class="slider-container">
+                    <span>Tengo poco autocontrol y disciplina</span>
+                    <input type="range" class="slider" id="prin6" min="-3" max="3" value="0" oninput="updateValue(this)">
+                    <span class="value-display" id="val6">0</span>
+                    <span>Practico disciplina espiritual consistente</span>
+                </div>
+            </div>
+
+            <!-- PRINCIPIO 7 -->
+            <div class="principle">
+                <div class="principle-title">7. Perspectiva Eterna vs. Temporal</div>
+                <div class="principle-description">
+                    Veo los problemas temporales desde la perspectiva de la eternidad con Dios
+                </div>
+                <div class="slider-container">
+                    <span>Vivo solo para el presente</span>
+                    <input type="range" class="slider" id="prin7" min="-3" max="3" value="0" oninput="updateValue(this)">
+                    <span class="value-display" id="val7">0</span>
+                    <span>Siempre tengo perspectiva eterna</span>
+                </div>
+            </div>
+
+            <!-- PRINCIPIO 8 -->
+            <div class="principle">
+                <div class="principle-title">8. Indiferencia Santa hacia lo Material</div>
+                <div class="principle-description">
+                    Uso las cosas materiales sin ser poseído por ellas, manteniendo a Dios como prioridad
+                </div>
+                <div class="slider-container">
+                    <span>Estoy muy apegado a lo material</span>
+                    <input type="range" class="slider" id="prin8" min="-3" max="3" value="0" oninput="updateValue(this)">
+                    <span class="value-display" id="val8">0</span>
+                    <span>Tengo indiferencia santa hacia lo material</span>
+                </div>
+            </div>
+
+            <!-- PRINCIPIO 9 -->
+            <div class="principle">
+                <div class="principle-title">9. Paz que Sobrepasa Entendimiento</div>
+                <div class="principle-description">
+                    Experimento paz sobrenatural que no depende de circunstancias sino de mi relación con Dios
+                </div>
+                <div class="slider-container">
+                    <span>Mi paz depende de las circunstancias</span>
+                    <input type="range" class="slider" id="prin9" min="-3" max="3" value="0" oninput="updateValue(this)">
+                    <span class="value-display" id="val9">0</span>
+                    <span>Tengo paz que sobrepasa entendimiento</span>
+                </div>
+            </div>
+
+            <!-- PRINCIPIO 10 -->
+            <div class="principle">
+                <div class="principle-title">10. Examen de Conciencia Bíblico</div>
+                <div class="principle-description">
+                    Hago un examen diario de conciencia buscando crecimiento espiritual y confesión
+                </div>
+                <div class="slider-container">
+                    <span>Nunca reflexiono sobre mis acciones</span>
+                    <input type="range" class="slider" id="prin10" min="-3" max="3" value="0" oninput="updateValue(this)">
+                    <span class="value-display" id="val10">0</span>
+                    <span>Practico examen diario consistente</span>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-primary" onclick="calculateResults()">🔢 Calcular Resultados</button>
+                <button class="btn-secondary" onclick="resetEvaluation()">🔄 Limpiar Formulario</button>
+            </div>
+        </div>
+
+        <!-- TAB 2: MIS RESULTADOS -->
+        <div id="results" class="tab-content">
+            <div id="resultsContent" class="empty-state">
+                <div class="empty-state-icon">📊</div>
+                <p>Completa una evaluación para ver tus resultados aquí</p>
+            </div>
+        </div>
+
+        <!-- TAB 3: MI PROGRESO -->
+        <div id="progress" class="tab-content">
+            <div id="progressContent" class="empty-state">
+                <div class="empty-state-icon">📈</div>
+                <p>Completa múltiples evaluaciones para ver tu progreso a lo largo del tiempo</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
