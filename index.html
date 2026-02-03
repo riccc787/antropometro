@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antropómetro Estoico-Cristiano</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #0f3a5a 0%, #1a4d6d 50%, #0f3a5a 100%); min-height: 100vh; padding: 20px; color: #333; }
+.container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+header { background: linear-gradient(135deg, #0f3a5a 0%, #1a4d6d 100%); color: white; padding: 40px 20px; text-align: center; }
+h1 { font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+.subtitle { font-size: 1.1em; opacity: 0.9; margin-bottom: 20px; }
+.important-notice { background: linear-gradient(135deg, #d4af37 0%, #f5d547 100%); border-left: 5px solid #8b7500; padding: 20px; margin: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(212,175,55,0.2); }
+.important-notice p { font-size: 1.1em; color: #1a1a1a; font-weight: 600; line-height: 1.6; }
+.important-notice a { color: #0f3a5a; text-decoration: none; font-weight: 700; border-bottom: 2px solid #0f3a5a; transition: all 0.3s ease; }
+.important-notice a:hover { background-color: rgba(15,58,90,0.1); padding: 2px 4px; }
+.tabs { display: flex; background: #f5f5f5; border-bottom: 2px solid #ddd; gap: 0; }
+.tab-button { flex: 1; padding: 20px; background: none; border: none; cursor: pointer; font-size: 1em; font-weight: 600; color: #666; transition: all 0.3s ease; border-bottom: 3px solid transparent; }
+.tab-button:hover { background: #f0f0f0; color: #0f3a5a; }
+.tab-button.active { color: #0f3a5a; background: white; border-bottom-color: #d4af37; }
+.tab-content { display: none; padding: 40px; animation: fadeIn 0.3s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.principle { margin-bottom: 30px; background: #f9f9f9; padding: 20px; border-radius: 8px; border-left: 4px solid #d4af37; }
+.principle-title { font-size: 1.1em; font-weight: 700; color: #0f3a5a; margin-bottom: 15px; }
+.principle-description { font-size: 0.95em; color: #666; margin-bottom: 15px; line-height: 1.6; }
+.slider-container { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+.slider { flex: 1; min-width: 200px; height: 8px; border-radius: 5px; background: linear-gradient(to right, #e74c3c 0%, #f39c12 33%, #95a5a6 50%, #27ae60 66%, #2ecc71 100%); outline: none; -webkit-appearance: none; appearance: none; cursor: pointer; }
+.slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 25px; height: 25px; border-radius: 50%; background: #0f3a5a; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s ease; }
+.slider::-webkit-slider-thumb:hover { transform: scale(1.2); background: #d4af37; }
+.slider::-moz-range-thumb { width: 25px; height: 25px; border-radius: 50%; background: #0f3a5a; cursor: pointer; border: none; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.3s ease; }
+.slider::-moz-range-thumb:hover { transform: scale(1.2); background: #d4af37; }
+.value-display { min-width: 50px; text-align: center; font-weight: 700; color: #0f3a5a; font-size: 1.2em; padding: 5px 10px; background: #f0f0f0; border-radius: 5px; }
+.button-group { display: flex; gap: 15px; margin-top: 30px; flex-wrap: wrap; }
+button { padding: 12px 30px; border: none; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+.btn-primary { background: linear-gradient(135deg, #0f3a5a 0%, #1a4d6d 100%); color: white; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(15,58,90,0.3); }
+.btn-secondary { background: #d4af37; color: #0f3a5a; font-weight: 700; }
+.btn-secondary:hover { background: #c9a227; transform: translateY(-2px); }
+.btn-copy { background: #27ae60; color: white; }
+.btn-copy:hover { background: #229954; transform: translateY(-2px); }
+.btn-copy.copied { background: #16a085; }
+.input-group { margin-bottom: 20px; }
+.input-group label { display: block; font-weight: 600; color: #0f3a5a; margin-bottom: 8px; }
+.input-group input { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; }
+.input-group input:focus { outline: none; border-color: #d4af37; box-shadow: 0 0 8px rgba(212,175,55,0.3); }
+.results-section { background: #f9f9f9; padding: 30px; border-radius: 8px; margin-bottom: 30px; }
+.score-display { text-align: center; margin-bottom: 30px; }
+.score-number { font-size: 3.5em; font-weight: 700; color: #0f3a5a; margin: 20px 0; }
+.score-level { font-size: 1.5em; font-weight: 700; color: #d4af37; margin-bottom: 15px; }
+.score-interpretation { background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #d4af37; margin-top: 20px; line-height: 1.8; color: #666; }
+.chart-container { position: relative; height: 400px; margin-bottom: 40px; background: white; padding: 20px; border-radius: 8px; }
+.chart-title { font-size: 1.3em; font-weight: 700; color: #0f3a5a; margin-bottom: 20px; text-align: center; }
+.results-text-box { background: #f0f8ff; border: 2px solid #0f3a5a; border-radius: 8px; padding: 20px; margin: 20px 0; font-family: 'Courier New', monospace; font-size: 0.9em; line-height: 1.6; color: #333; max-height: 400px; overflow-y: auto; white-space: pre-wrap; word-wrap: break-word; }
+.copy-button-container { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+.history-item { background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #d4af37; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+.history-date { font-weight: 700; color: #0f3a5a; }
+.history-score { font-size: 1.3em; font-weight: 700; color: #d4af37; }
+.recommendations { background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%); padding: 25px; border-radius: 8px; border-left: 5px solid #0f3a5a; margin-top: 25px; }
+.recommendations h3 { color: #0f3a5a; margin-bottom: 15px; font-size: 1.3em; }
+.recommendations ul { list-style: none; padding-left: 0; }
+.recommendations li { padding: 10px; margin-bottom: 8px; background: white; border-radius: 6px; border-left: 3px solid #d4af37; padding-left: 15px; color: #666; line-height: 1.6; }
+.empty-state { text-align: center; padding: 40px; color: #999; }
+.empty-state-icon { font-size: 3em; margin-bottom: 15px; }
+.no-data-message { background: #fff3cd; border: 1px solid #ffc107; color: #856404; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
+@media (max-width: 768px) { h1 { font-size: 1.8em; } .tabs { flex-direction: column; } .tab-button { border-bottom: 2px solid #ddd; border-left: 3px solid transparent; } .tab-button.active { border-bottom: none; border-left-color: #d4af37; } .tab-content { padding: 20px; } .score-number { font-size: 2.5em; } .button-group { flex-direction: column; } button { width: 100%; } .copy-button-container { flex-direction: column; } .copy-button-container button { width: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🙏 Antropómetro Estoico-Cristiano</h1>
+            <p class="subtitle">De la Imperturbabilidad Espiritual</p>
+        </header>
+
+        <div class="important-notice">
+            <p><strong>Antes de empezar. Lee esto <a href="https://docs.google.com/document/d/1T9I38g7YzhwZv1pG5JnIxNWwUQ7-cVmR7B1Ab6ZcTxc/edit?usp=sharing" target="_blank">aquí</a></strong></p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab(event, 'evaluation')">📝 Nueva Evaluación</button>
+            <button class="tab-button" onclick="openTab(event, 'results')">📊 Mis Resultados</button>
+            <button class="tab-button" onclick="openTab(event, 'progress')">📈 Mi Progreso</button>
+        </div>
+
+        <div id="evaluation" class="tab-content active">
+            <div class="input-group">
+                <label>📅 Fecha de Evaluación (Opcional):</label>
+                <input type="date" id="evalDate">
+            </div>
+
+            <div class="principle">
+                <div class="principle-title">1. Soberanía Divina y Dicotomía del Control</div>
+                <div class="principle-description">Reconozco que Dios es soberano sobre lo incontrolable, mientras actúo responsablemente</div>
+                <div class="slider-container">
+                    <span>No reconozco</span>
+                    <input type="range" class="slider" id="prin1" min="-3" max="3" value="0" onchange="updateValue(this)" oninput="updateValue(this)">
+                    <span class="value-display" id="val1">0</span>
+                    <span>Confío totalmente</span>
+                </div>
+            </div>
+
+            <div class="principle">
+                <div class="principle-title">2. Providencia Divina y Visualización Negativa</div>
+                <div class="principle-description">Me preparo mentalmente para dificultades confiando en Dios</div>
+                <div class="slider-container">
+                    <span>Evito pensar</span>
+                    <input type="range" class="slider" id="prin2" min="-3" max="3" value="0" onchange="updateValue(this)" oninput="updateValue(this)">
+                    <span class="value-display" id="val2">0</span>
+                    <span>Me preparo</span>
+                </div>
+            </div>
+
+            <div class="principle">
+                <div class="principle-title">3. Sabiduría Divina vs. Humana</div>
+                <div class="principle-description">Busco discernimiento divino para ver situaciones desde perspectiva eterna</div>
+                <div class="slider-container">
+                    <span>Solo razón</span>
+                    <input type="range" class="slider" id="prin3" min="-3" max="3" value="0" onchange="updateValue(this)" oninput="updateValue(this)">
+                    <span class="value-display" id="val3">0</span>
+                    <span>Sabiduría divina</span>
+                </div>
+            </div>
+
+            <div class="principle">
+                <div class="principle-title">4. Justicia Divina y Amor al Prójimo</div>
+                <div class="principle-description">Trato a otros con justicia porque son creados a imagen de Dios</div>
+                <div class="slider-container">
+                    <span>Como competencia</span>
+                    <input type="range" class="slider" id="prin4" min="-3" max="3" value="0" onchange="updateValue(this)" oninput="updateValue(this)">
+                    <span class="value-display" id="val4">0</span>
+                    <span>Imagen de Dios</span>
+                </div>
+            </div>
+
+            <div class="principle">
+                <div class="principle-title">5. Coraje Espiritual ante la Adversidad</div>
+                <div class="principle-description">Tengo valor para vivir según principios bíblicos</div>
+                <div class="slider-container">
+                    <span>Miedo de sufrir</span>
+                    <input type="range" class="slider" id="prin5" min="-3" max="3" value="0" onchange="updateValue(this)" oninput="updateValue(this)">
+                    <span class="value-display" id="val5">0</span>
+                    <span>Dispuesto a sufrir</span>
+                </div>
+            </div>
+
+            <div class="principle">
+                <div class="principle-title">6. Disciplina Espiritual y Autocontrol</div>
+                <div class="principle-description">Desarrollo autodisciplina como cooperación con Espíritu Santo</div>
+                <div class="slider-container">
+                    <span>Poco control</span>
+                    <input type="range" class="slider" id="prin6" min="-3" max="3" value="0" onchange="updateValue(this)" oninput="updateValue(this)">
+                    <span class="value-display" id="val6">0</span>
+                    <span>Disciplina consistente</span>
+                </div>
+            </div>
+
+            <div class="principle">
+                <div class="principle-title">7. Perspectiva Eterna vs. Temporal</div>
+                <div class="principle-description">Veo problemas temporales desde perspectiva de eternidad con Dios</div>
+                <div class="slider-container">
+                    <span>Vivo presente</span>
+                    <input type="range" class="slider" id="prin7" min="-3" max="3" value="0" onchange="updateValue(this)" oninput="updateValue(this)">
+                    <span class="value-display" id="val7">0</span>
+                    <span>Perspectiva eterna</span>
+                </div>
+            </div>
+
+            <div class="principle">
+                <div class="principle-title">8. Indiferencia Santa hacia lo Material</div>
+                <div class="principle-description">Uso cosas materiales sin ser poseído por ellas</div>
+                <div class="slider-container">
+                    <span>Apegado</span>
+                    <input type="range" class="slider" id="prin8" min="-3" max="3" value="0" onchange="updateValue(this)" oninput="updateValue(this)">
+                    <span class="value-display" id="val8">0</span>
+                    <span>Indiferencia santa</span>
+                </div>
+            </div>
+
+            <div class="principle">
+                <div class="principle-title">9. Paz que Sobrepasa Entendimiento</div>
+                <div class="principle-description">Experimento paz sobrenatural independiente de circunstancias</div>
+                <div class="slider-container">
+                    <span>Depende circunstancias</span>
+                    <input type="range" class="slider" id="prin9" min="-3" max="3" value="0" onchange="updateValue(this)" oninput="updateValue(this)">
+                    <span class="value-display" id="val9">0</span>
+                    <span>Paz que sobrepasa</span>
+                </div>
+            </div>
+
+            <div class="principle">
+                <div class="principle-title">10. Examen de Conciencia Bíblico</div>
+                <div class="principle-description">Hago examen diario buscando crecimiento espiritual y confesión</div>
+                <div class="slider-container">
+                    <span>Nunca reflexiono</span>
+                    <input type="range" class="slider" id="prin10" min="-3" max="3" value="0" onchange="updateValue(this)" oninput="updateValue(this)">
+                    <span class="value-display" id="val10">0</span>
+                    <span>Examen diario</span>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-primary" onclick="calculateResults()">🔢 Calcular Resultados</button>
+                <button class="btn-secondary" onclick="resetEvaluation()">🔄 Limpiar</button>
+            </div>
+        </div>
+
+        <div id="results" class="tab-content">
+            <div id="resultsContent" class="empty-state">
+                <div class="empty-state-icon">📊</div>
+                <p>Completa una evaluación para ver tus resultados aquí</p>
+            </div>
+        </div>
+
+        <div id="progress" class="tab-content">
+            <div id="progressContent" class="empty-state">
+                <div class="empty-state-icon">📈</div>
+                <p>Completa múltiples evaluaciones para ver tu progreso</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+let evaluations = [];
+const principles = ["Soberanía Divina y Control","Providencia y Preparación","Fuente de Sabiduría","Justicia Divina y Amor","Coraje Espiritual","Disciplina Espiritual","Perspectiva Eterna","Indiferencia Santa","Paz Interior","Examen de Conciencia"];
+
+function updateValue(slider) {
+    const sliderIdValue = slider.id.replace('prin', 'val');
+    document.getElementById(sliderIdValue).textContent = slider.value;
+}
+
+function generateResultsText(evaluation) {
+    let text = "═══════════════════════════════════════════════════════════
+";
+    text += "RESULTADOS - ANTROPÓMETRO ESTOICO-CRISTIANO
+";
+    text += "═══════════════════════════════════════════════════════════
+
+";
+    text += `📅 Fecha de Evaluación: ${evaluation.date}
+`;
+    text += `📊 Puntuación Total: ${evaluation.totalScore}/30
+
+`;
+
+    text += "───────────────────────────────────────────────────────────
+";
+    text += "PUNTUACIONES POR PRINCIPIO:
+";
+    text += "───────────────────────────────────────────────────────────
+
+";
+
+    evaluation.scores.forEach((score, index) => {
+        text += `${index + 1}. ${principles[index]}
+`;
+        text += `   Puntuación: ${score}
+
+`;
+    });
+
+    text += "═══════════════════════════════════════════════════════════
+";
+    text += "INTERPRETACIÓN GENERAL
+";
+    text += "═══════════════════════════════════════════════════════════
+
+";
+
+    const score = evaluation.totalScore;
+    if (score >= 25) {
+        text += "Nivel: SABIO MADURO
+
+";
+        text += "Has logrado una integración madura entre la sabiduría filosófica y la fe bíblica. Tu imperturbabilidad está fundamentada tanto en principios racionales como en confianza divina.
+";
+    } else if (score >= 20) {
+        text += "Nivel: APRENDIZ AVANZADO
+
+";
+        text += "Tienes un buen desarrollo general con áreas específicas que necesitan atención.
+";
+    } else if (score >= 15) {
+        text += "Nivel: ESTUDIANTE ACTIVO
+
+";
+        text += "Muestras progreso notable en tu camino espiritual. Mantén la práctica constante.
+";
+    } else if (score >= 10) {
+        text += "Nivel: PRINCIPIANTE COMPROMETIDO
+
+";
+        text += "Tienes los fundamentos establecidos. Enfócate en desarrollar disciplinas regulares.
+";
+    } else if (score >= 5) {
+        text += "Nivel: EXPLORADOR INICIAL
+
+";
+        text += "Estás comenzando. Dedica más tiempo al estudio bíblico.
+";
+    } else {
+        text += "Nivel: BUSCADOR EMERGENTE
+
+";
+        text += "Estás dando los primeros pasos. Comienza con oración y lectura bíblica.
+";
+    }
+
+    text += "
+═══════════════════════════════════════════════════════════
+";
+
+    return text;
+}
+
+function copyResultsToClipboard(evaluation) {
+    const text = generateResultsText(evaluation);
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = event.target;
+        btn.textContent = "✅ ¡Copiado!";
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = "📋 Copiar Resultados";
+            btn.classList.remove('copied');
+        }, 2000);
+    }).catch(() => {
+        alert("Error al copiar. Intenta de nuevo.");
+    });
+}
+
+function calculateResults() {
+    const date = document.getElementById('evalDate').value || new Date().toLocaleDateString('es-ES');
+    let total = 0;
+    const scores = [];
+    for (let i = 1; i <= 10; i++) {
+        const value = parseInt(document.getElementById(`prin${i}`).value);
+        scores.push(value);
+        total += value;
+    }
+    const finalScore = total + 30;
+    const evaluation = { date, scores, totalScore: finalScore, timestamp: new Date() };
+    evaluations.push(evaluation);
+    displayResults(evaluation);
+    showTab('results');
+    localStorage.setItem('anthropometer_evaluations', JSON.stringify(evaluations));
+}
+
+function displayResults(evaluation) {
+    const score = evaluation.totalScore;
+    let level, interpretation;
+    if (score >= 25) {
+        level = "Sabio Maduro";
+        interpretation = "Has logrado una integración madura entre la sabiduría filosófica y la fe bíblica. Tu imperturbabilidad está fundamentada tanto en principios racionales como en confianza divina.";
+    } else if (score >= 20) {
+        level = "Aprendiz Avanzado";
+        interpretation = "Tienes un buen desarrollo general con áreas específicas que necesitan atención.";
+    } else if (score >= 15) {
+        level = "Estudiante Activo";
+        interpretation = "Muestras progreso notable en tu camino espiritual. Mantén la práctica constante.";
+    } else if (score >= 10) {
+        level = "Principiante Comprometido";
+        interpretation = "Tienes los fundamentos establecidos. Enfócate en desarrollar disciplinas regulares.";
+    } else if (score >= 5) {
+        level = "Explorador Inicial";
+        interpretation = "Estás comenzando. Dedica más tiempo al estudio bíblico.";
+    } else {
+        level = "Buscador Emergente";
+        interpretation = "Estás dando los primeros pasos. Comienza con oración y lectura bíblica.";
+    }
+
+    const resultsText = generateResultsText(evaluation);
+
+    const resultsHTML = `<div class="results-section"><div class="score-display"><div style="font-size:0.9em;color:#999;">Evaluación del ${evaluation.date}</div><div class="score-number">${score}/30</div><div class="score-level">${level}</div></div><div class="score-interpretation"><strong>Interpretación:</strong><br>${interpretation}</div></div><div class="results-text-box">${resultsText}</div><div class="copy-button-container"><button class="btn-copy" onclick="copyResultsToClipboard(evaluations[evaluations.length-1])">📋 Copiar Resultados</button></div><div class="chart-container"><div class="chart-title">📊 Tu Perfil por Principio</div><canvas id="barChart"></canvas></div><div class="chart-container"><div class="chart-title">🎯 Análisis Integral (Gráfico Radar)</div><canvas id="radarChart"></canvas></div><div class="recommendations"><h3>💡 Recomendaciones</h3><ul><li><strong>Oración:</strong> 15-20 min diarios</li><li><strong>Examen:</strong> Reflexiona cada noche</li><li><strong>Accountability:</strong> Comparte resultados</li><li><strong>Práctica:</strong> Un principio por semana</li><li><strong>Reevaluación:</strong> Cada mes</li></ul></div>`;
+
+    document.getElementById('resultsContent').innerHTML = resultsHTML;
+    setTimeout(() => { createBarChart(evaluation.scores); createRadarChart(evaluation.scores); }, 100);
+}
+
+function createBarChart(scores) {
+    const ctx = document.getElementById('barChart').getContext('2d');
+    new Chart(ctx, { type: 'bar', data: { labels: principles, datasets: [{ label: 'Puntuación', data: scores, backgroundColor: ['#d4af37','#c9a227','#d4af37','#c9a227','#d4af37','#c9a227','#d4af37','#c9a227','#d4af37','#c9a227'], borderColor: '#0f3a5a', borderWidth: 2, borderRadius: 5 }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { min: -3, max: 3, ticks: { stepSize: 1 } } }, plugins: { legend: { display: false } } } });
+}
+
+function createRadarChart(scores) {
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    new Chart(ctx, { type: 'radar', data: { labels: principles.map(p => p.split(' ')[0]), datasets: [{ label: 'Tu Puntuación', data: scores, borderColor: '#0f3a5a', backgroundColor: 'rgba(15,58,90,0.2)', borderWidth: 2, pointBackgroundColor: '#d4af37', pointBorderColor: '#0f3a5a', pointRadius: 5 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: -3, max: 3, ticks: { stepSize: 1 } } }, plugins: { legend: { display: false } } } });
+}
+
+function openTab(evt, tabName) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(tabName).classList.add('active');
+    evt.currentTarget.classList.add('active');
+    if (tabName === 'progress') displayProgress();
+}
+
+function showTab(tabName) {
+    document.querySelector(`button[onclick="openTab(event, '${tabName}')"]`).click();
+}
+
+function displayProgress() {
+    if (evaluations.length === 0) {
+        document.getElementById('progressContent').innerHTML = '<div class="empty-state"><div class="empty-state-icon">📈</div><p>No tienes evaluaciones registradas</p></div>';
+        return;
+    }
+    if (evaluations.length === 1) {
+        document.getElementById('progressContent').innerHTML = '<div class="no-data-message">Tienes 1 evaluación. Completa una segunda para ver gráficos</div>' + getHistoryHTML();
+        return;
+    }
+    document.getElementById('progressContent').innerHTML = '<div class="chart-container"><div class="chart-title">📈 Tu Evolución en el Tiempo</div><canvas id="lineChart"></canvas></div>' + getHistoryHTML();
+    setTimeout(createLineChart, 100);
+}
+
+function getHistoryHTML() {
+    let html = '<h3 style="color:#0f3a5a;margin:30px 0 20px;font-size:1.3em;">📋 Historial</h3>';
+    evaluations.slice().reverse().forEach((e, i) => {
+        html += `<div class="history-item"><div><div class="history-date">${e.date}</div><div style="color:#999;font-size:0.9em;">Eval ${evaluations.length-i}</div></div><div class="history-score">${e.totalScore}/30</div></div>`;
+    });
+    return html;
+}
+
+function createLineChart() {
+    const ctx = document.getElementById('lineChart').getContext('2d');
+    new Chart(ctx, { type: 'line', data: { labels: evaluations.map((e,i) => `Eval ${i+1}`), datasets: [{ label: 'Puntuación Total', data: evaluations.map(e => e.totalScore), borderColor: '#0f3a5a', backgroundColor: 'rgba(212,175,55,0.1)', borderWidth: 3, pointBackgroundColor: '#d4af37', pointBorderColor: '#0f3a5a', pointRadius: 6, tension: 0.4, fill: true }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 30 } }, plugins: { legend: { display: true, labels: { color: '#0f3a5a' } } } } });
+}
+
+function resetEvaluation() {
+    for (let i = 1; i <= 10; i++) {
+        document.getElementById(`prin${i}`).value = 0;
+        document.getElementById(`val${i}`).textContent = 0;
+    }
+    document.getElementById('evalDate').value = '';
+}
+
+window.addEventListener('load', () => {
+    const saved = localStorage.getItem('anthropometer_evaluations');
+    if (saved) evaluations = JSON.parse(saved);
+});
+    </script>
+</body>
+</html>
